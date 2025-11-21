@@ -1,4 +1,5 @@
 local simple_button = require "simple_button.simple_button"
+local debug_log = require "simple_button.debug_log"
 
 local function create_blue_button(node, callback)
 	return simple_button.create(node, hash("blue_button_pressed"), hash("blue_button_released"), callback)
@@ -6,15 +7,26 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
+	-- Initialize debug log system
+	debug_log.init(gui.get_node("debug_panel"), gui.get_node("debug_text"))
+
 	self.button1 = create_blue_button(gui.get_node("button1"), function()
 		print("Clicked button 1")
+		debug_log.log("Button 1 clicked")
 	end)
 	self.button2 = create_blue_button(gui.get_node("button2"), function()
 		print("Clicked button 2")
+		debug_log.log("Button 2 clicked")
+	end)
+	self.toggle_button = create_blue_button(gui.get_node("toggle_button"), function()
+		debug_log.toggle_panel()
+		debug_log.log("Debug panel toggled")
 	end)
 end
 
 function on_input(self, action_id, action)
 	self.button1.on_input(action_id, action)
 	self.button2.on_input(action_id, action)
+	self.toggle_button.on_input(action_id, action)
 end
