@@ -72,9 +72,20 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("trigger_response") then
 		if message.enter then
-			self.nearby[message.other_id] = true
+			-- Check if the other object has a bullet component
+			local other_url = msg.url(message.other_id)
+			if other_url.fragment == "bullet" then
+				-- Hit by bullet, destroy enemy and bullet
+				go.delete(message.other_id)
+				go.delete()
+			else
+				self.nearby[message.other_id] = true
+			end
 		else
-			self.nearby[message.other_id] = false
+			local other_url = msg.url(message.other_id)
+			if other_url.fragment ~= "bullet" then
+				self.nearby[message.other_id] = false
+			end
 		end
 	end
 end

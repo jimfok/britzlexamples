@@ -1,0 +1,35 @@
+go.property("speed", 500)
+
+function init(self)
+	-- Bullet initialization
+end
+
+function final(self)
+	-- Cleanup
+end
+
+function update(self, dt)
+	local pos = go.get_position()
+	local rot = go.get_rotation()
+
+	-- Move bullet forward
+	local direction = vmath.rotate(rot, vmath.vector3(0, 1, 0))
+	local distance = self.speed * dt
+	pos = pos + direction * distance
+
+	-- Check if bullet is off-screen and delete if so
+	if pos.x < -100 or pos.x > 1236 or pos.y < -100 or pos.y > 740 then
+		go.delete()
+		return
+	end
+
+	go.set_position(pos)
+end
+
+function on_message(self, message_id, message, sender)
+	-- Handle collision messages if needed
+end
+
+function on_reload(self)
+	-- Reload handling
+end
